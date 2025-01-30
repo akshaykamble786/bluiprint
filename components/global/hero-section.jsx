@@ -6,23 +6,36 @@ import { ArrowRight, LinkIcon } from "lucide-react"
 import { useContext, useState } from "react"
 import { LoginForm } from "../login-form";
 import { UserDetailsContext } from "@/context/user-details-context";
+import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
+import { useMutation } from "convex/react";
 
 export function HeroSection() {
   const [userInput, setUserInput] = useState("");
   const {messages, setMessages} = useContext(MessagesContext);
   const {userDetails, setUserDetails} = useContext(UserDetailsContext);
   const [openDialog, setOpenDialog] = useState(false);
+  
+  const createWorkspace = useMutation(api.workspace.createWorkspace);
+  const router = useRouter();
 
-  const onGenerate = (input) => {
+  const onGenerate = async (input) => {
     if(!userDetails?.name){
       setOpenDialog(true);
       return;
     }
-
-    setMessages({
+    const message = {
       role: "user",
       content: input
+    }
+    setMessages(message)
+
+    const workspaceId = await createWorkspace({
+      user: userDetails._id,
+      messages: [message]
     })
+    console.log(workspaceId);
+    router.push(`/workspace/${workspaceId}`)
   }
 
   return (
