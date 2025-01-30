@@ -4,12 +4,21 @@ import { Button } from "@/components/ui/button"
 import { MessagesContext } from "@/context/messages-context";
 import { ArrowRight, LinkIcon } from "lucide-react"
 import { useContext, useState } from "react"
+import { LoginForm } from "../login-form";
+import { UserDetailsContext } from "@/context/user-details-context";
 
 export function HeroSection() {
   const [userInput, setUserInput] = useState("");
   const {messages, setMessages} = useContext(MessagesContext);
+  const {userDetails, setUserDetails} = useContext(UserDetailsContext);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const onGenerate = (input) => {
+    if(!userDetails?.name){
+      setOpenDialog(true);
+      return;
+    }
+
     setMessages({
       role: "user",
       content: input
@@ -19,8 +28,8 @@ export function HeroSection() {
   return (
     <main className="flex-1 flex flex-col items-center mt-36 xl:mt-42 gap-2">
 
-      <h1 className="text-5xl md:text-6xl font-semibold text-center mb-4">What do you want to build?</h1>
-      <p className="text-white/60 text-lg mb-8 text-foreground text-center">Prompt, run, edit, and deploy full-stack web apps.</p>
+      <h1 className="text-3xl md:text-5xl font-semibold text-center mb-4">What do you want to build?</h1>
+      <p className="text-white/60 text-md mb-8 text-foreground text-center">Prompt, run, edit, and deploy full-stack web apps.</p>
 
       <div className="w-full max-w-2xl mb-8">
         <div className="relative">
@@ -54,6 +63,7 @@ export function HeroSection() {
           </Button>
         ))}
       </div>
+      <LoginForm openDialog={openDialog} closeDialog={() => setOpenDialog(false)}/>
     </main>
   )
 }

@@ -5,7 +5,8 @@ import { ThemeToggle } from "../theme-toggle"
 export function Header() {
   return (
     <header className="flex items-center justify-between p-4 border-b border-white/10">
-      <Link href="/" className="text-2xl font-bold">
+      <Link href="/" className="text-xl font-semibold">
+        <span className="opacity-60 mr-2">⚡</span>
         Bluiprint
       </Link>
       <div className="flex items-center gap-4">
