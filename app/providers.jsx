@@ -11,7 +11,7 @@ import { useConvex } from 'convex/react';
 import React, { useEffect, useState } from 'react'
 
 const Providers = ({ children }) => {
-    const [messages, setMessages] = useState();
+    const [messages, setMessages] = useState([]);
     const [userDetails, setUserDetails] = useState();
     const convex = useConvex();
 

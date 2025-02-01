@@ -12,31 +12,31 @@ import { useMutation } from "convex/react";
 
 export function HeroSection() {
   const [userInput, setUserInput] = useState("");
-  const {messages, setMessages} = useContext(MessagesContext);
-  const {userDetails, setUserDetails} = useContext(UserDetailsContext);
+  const { messages, setMessages } = useContext(MessagesContext);
+  const { userDetails, setUserDetails } = useContext(UserDetailsContext);
   const [openDialog, setOpenDialog] = useState(false);
-  
+
   const createWorkspace = useMutation(api.workspace.createWorkspace);
   const router = useRouter();
 
   const onGenerate = async (input) => {
-    if(!userDetails?.name){
+    if (!userDetails?.name) {
       setOpenDialog(true);
       return;
     }
-    const message = {
-      role: "user",
+
+    const msg = {
+      role: 'user',
       content: input
     }
-    setMessages(message)
-
-    const workspaceId = await createWorkspace({
-      user: userDetails._id,
-      messages: [message]
+    setMessages([...messages, msg]);
+    const workSpaceId = await createWorkspace({
+      messages: [msg],
+      user: userDetails?._id
     })
-    console.log(workspaceId);
-    router.push(`/workspace/${workspaceId}`)
-  }
+    console.log(workSpaceId);
+    router.push('/workspace/' + workSpaceId);
+  };
 
   return (
     <main className="flex-1 flex flex-col items-center mt-36 xl:mt-42 gap-2">
@@ -53,11 +53,12 @@ export function HeroSection() {
           />
           <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
             <LinkIcon className="size-5 opacity-40" />
-            {userInput &&
-              <Button variant="default" className="size-6" onClick={() => onGenerate(userInput)}>
-                <ArrowRight />
-              </Button>
-            }
+            {userInput && (
+              <ArrowRight
+                onClick={() => onGenerate(userInput)}
+                className='bg-blue-500 p-2 h-8 w-8 rounded-md cursor-pointer'
+              />
+            )}
           </div>
         </div>
       </div>
@@ -76,7 +77,7 @@ export function HeroSection() {
           </Button>
         ))}
       </div>
-      <LoginForm openDialog={openDialog} closeDialog={() => setOpenDialog(false)}/>
+      <LoginForm openDialog={openDialog} closeDialog={() => setOpenDialog(false)} />
     </main>
   )
 }
