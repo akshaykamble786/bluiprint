@@ -24,3 +24,13 @@ export const GetWorkspace = query({
         return result;
     }
 });
+
+export const UpdateFiles = mutation({
+    args: { workSpaceId: v.id('workspace'), files: v.any() },
+    handler: async (ctx, args) => {
+        const result = await ctx.db.patch(args.workSpaceId, {
+            fileData: args.files
+        });
+        return result;
+    }
+})

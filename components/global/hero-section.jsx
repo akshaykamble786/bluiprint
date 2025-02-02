@@ -28,15 +28,24 @@ export function HeroSection() {
     const msg = {
       role: 'user',
       content: input
+    };
+
+    try {
+      setMessages([msg]);
+
+      const workSpaceId = await createWorkspace({
+        messages: [msg],
+        user: userDetails?._id
+      });
+
+      setUserInput("");
+
+      router.replace('/workspace/' + workSpaceId);
+    } catch (error) {
+      console.error("Error creating workspace:", error);
     }
-    setMessages([...messages, msg]);
-    const workSpaceId = await createWorkspace({
-      messages: [msg],
-      user: userDetails?._id
-    })
-    console.log(workSpaceId);
-    router.push('/workspace/' + workSpaceId);
   };
+
 
   return (
     <main className="flex-1 flex flex-col items-center mt-36 xl:mt-42 gap-2">

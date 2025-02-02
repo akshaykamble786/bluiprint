@@ -77,3 +77,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(82, 82, 91) transparent;
+}

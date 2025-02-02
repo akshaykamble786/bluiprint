@@ -3,6 +3,7 @@
 import { Footer } from '@/components/global/footer'
 import { Header } from '@/components/global/header'
 import { ThemeProvider } from '@/components/theme-provider'
+import { ActionContext } from '@/context/action-context';
 import { MessagesContext } from '@/context/messages-context';
 import { UserDetailsContext } from '@/context/user-details-context';
 import { api } from '@/convex/_generated/api';
@@ -13,16 +14,17 @@ import React, { useEffect, useState } from 'react'
 const Providers = ({ children }) => {
     const [messages, setMessages] = useState([]);
     const [userDetails, setUserDetails] = useState();
+    const [action, setAction] = useState();
     const convex = useConvex();
 
-    useEffect(() =>{
+    useEffect(() => {
         isAuthenticated();
-    },[])
+    }, [])
 
     const isAuthenticated = async () => {
-        if(typeof window !== undefined){
+        if (typeof window !== undefined) {
             const user = JSON.parse(localStorage.getItem('user'));
-            const result = await convex.query(api.users.getUser,{
+            const result = await convex.query(api.users.getUser, {
                 email: user?.email
             })
             setUserDetails(result);
@@ -33,16 +35,18 @@ const Providers = ({ children }) => {
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
             <UserDetailsContext.Provider value={{ userDetails, setUserDetails }}>
                 <MessagesContext.Provider value={{ messages, setMessages }}>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        <Header />
-                        {children}
-                        <Footer />
-                    </ThemeProvider>
+                    <ActionContext.Provider value={{ action, setAction }}>
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="system"
+                            enableSystem
+                            disableTransitionOnChange
+                        >
+                            <Header />
+                            {children}
+                            <Footer />
+                        </ThemeProvider>
+                    </ActionContext.Provider>
                 </MessagesContext.Provider>
             </UserDetailsContext.Provider>
         </GoogleOAuthProvider>
